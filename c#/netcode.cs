@@ -4,7 +4,7 @@ using System.Net;
 using System.Text;
 
 
-public class SendHi
+public class WASDController
 {
   static public void Main ()
   {
@@ -14,14 +14,12 @@ public class SendHi
 
     while(true)
     {
-      string msg_char = Console.ReadLine(); // Maybe ReadKey()
-      Byte[] msg = Encoding.ASCII.GetBytes(msg_char);
+
+      ConsoleKeyInfo msg_cki = Console.ReadKey();
+
+      Byte[] msg = Encoding.ASCII.GetBytes(msg_cki.Key.ToString());
 
       client.Send(msg, msg.Length);
-
-      var rcv_msg = client.Receive(ref pi);
-
-      Console.Write("pi: " + Encoding.ASCII.GetString(rcv_msg));
 
     }
   }

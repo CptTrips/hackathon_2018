@@ -63,6 +63,31 @@ class ListenThread(threading.Thread):
         reactor.callFromThread(reactor.stop)
 
 
+class BuggyIOThread(threading.Thread):
+    def __init__(self, protocol):
+
+        super(BuggyIOThread, slf).__init__()
+
+        self.protocol = protocol
+
+        self.stopped = 0
+
+        self.range_data = np.array([1, 1, 1])
+
+    def run(self):
+        reactor.listenUDP(7777, self.protocol)
+
+        reactor.run()
+
+        # Loop range messages
+
+        while self.stopped = 0:
+            pass
+
+
+    def stop(self):
+        self.stopped = 1
+
 if __name__ == "__main__":
     reactor.listenUDP(7777, Echo())
     reactor.run()

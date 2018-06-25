@@ -44,10 +44,5 @@ def main():
 
         print("Threads stopped gracefully")
 
-
-
-        # catch KeyboardInterrupt, kill processes
-
-
 if __name__ == "__main__":
     main()

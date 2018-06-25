@@ -72,6 +72,8 @@ class ControlThread(threading.Thread):
             reset_state(self.state)
             print("State reset: {}".format(self.state))
 
-            time.sleep(0.3)
+            # Write new ranges to range queue
+
+            time.sleep(0.1)
 
 

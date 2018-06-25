@@ -1,9 +1,10 @@
 import threading
 from control import ControlThread
-from netcode import ListenThread
+from netcode import BuggyIOThread
 import netcode
 import numpy as np
 import time
+from queue import Queue
 
 def sensor_loop():
     """Loop for sending ultrasonic range data to controller"""
@@ -13,13 +14,15 @@ def sensor_loop():
 
 def main():
 
-    state = np.array([0,0])
+    command_queue = Queue(1)
 
-    protocol = netcode.BuggyProtocol(state)
+    range_queue = Queue(1)
 
-    control_thread = ControlThread(state)
+    protocol = netcode.BuggyCommandProtocol(command_queue)
 
-    listen_thread = ListenThread(protocol)
+    control_thread = ControlThread(command_queue, range_queue)
+
+    io_thread = BuggyIOThread(protocol, range_queue)
 
     try:
         print("Initialising control")

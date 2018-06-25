@@ -1,6 +1,7 @@
 import numpy as np
 import time
 from motor_sensor.motor import Motors
+from motor_sensor.sensors import DistanceSensors
 import threading
 
 
@@ -25,22 +26,24 @@ def in_rzone(state):
     return state[0] > state[1] and -state[0] < state[1]
 
 
-def reset_state(state):
-
-    state[0] = state[1] = 0
 
 
 
 class ControlThread(threading.Thread):
 
-    def __init__(self, state):
+    def __init__(self, command_queue, range_queue):
 
         super(ControlThread,self).__init__()
 
-        self.state = state
+        self.command_queue = command_queue
 
         self.stop = 0
 
+        self.range_queue = range_queue
+
+    def reset_state(state):
+
+        state[0] = state[1] = 0
 
     def run(self):
 
@@ -49,31 +52,37 @@ class ControlThread(threading.Thread):
 
         buggy = Motors()
 
+        rangefinder = DistanceSensors()
+
         while not self.stop:
 
-            if in_deadzone(self.state, deadzone):
+            new_ranges = rangefinder.distances()
+
+            range_queue.put(new_ranges)
+
+            state = command_queue.get()
+
+            if in_deadzone(state, deadzone):
                 buggy.stop()
 
-            elif in_fwzone(self.state):
+            elif in_fwzone(state):
                 buggy.forward()
 
-            elif in_bwzone(self.state):
+            elif in_bwzone(state):
                 buggy.backward()
 
-            elif in_lzone(self.state):
+            elif in_lzone(state):
                 buggy.left()
 
-            elif in_rzone(self.state):
+            elif in_rzone(state):
                 buggy.right()
 
             else:
                 buggy.stop()
 
-            reset_state(self.state)
-            print("State reset: {}".format(self.state))
+            command_queue.task_done()
 
-            # Write new ranges to range queue
+            print("State reset: {}".format(state))
 
-            time.sleep(0.1)
-
+            time.sleep(0.01)
 

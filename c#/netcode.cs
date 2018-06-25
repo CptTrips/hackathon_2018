@@ -2,6 +2,7 @@ using System;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using System.Single;
 
 
 public class WASDController
@@ -42,11 +43,22 @@ public class LMController
     Console.Write("Connected")
   }
 
-  public void Send(string dir)
+  public void Send(float[] dir)
   {
-    Byte[] msg = Encoding.UTF8.GetBytes(dir);
+
+    x_byte = GetBytesSingle(dir[0]);
+
+    y_byte = GetBytesSingle(dir[1]);
+
+    var msg = new Byte[x_byte.Length + y_byte.Length];
+
+    x_byte.CopyTo(msg, 0);
+
+    y_byte.CopyTo(msg, x_byte.Length);
 
     client.Send(msg, msg.Length);
 
   }
 }
+
+

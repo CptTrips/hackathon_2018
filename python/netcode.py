@@ -7,7 +7,7 @@ class Echo(DatagramProtocol):
         print("Received %r from %s" % (data, addr))
         self.transport.write(data, addr)
 
-class Listener(DatagramProtocol):
+class BuggyProtocol(DatagramProtocol):
 
     def __init__(self, state):
 
@@ -18,16 +18,13 @@ class Listener(DatagramProtocol):
 
         return data
 
-
     def datagramReceived(self, data, addr):
 
         self.state = self.interpret(data)
 
-def listen_loop(state):
+def listen_loop(state, protocol):
 
-    l = Listener(state)
-
-    reactor.listenUDP(7777, l)
+    reactor.listenUDP(7777, protocol)
 
     reactor.run()
 

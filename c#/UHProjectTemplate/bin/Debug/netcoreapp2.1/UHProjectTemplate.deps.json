@@ -1,0 +1,53 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "UHProjectTemplate/1.0.0": {
+        "dependencies": {
+          "LeapCSharp.NET4.0": "2.3.1.0",
+          "UltrahapticsCSharp.NET40": "2.6.0.0"
+        },
+        "runtime": {
+          "UHProjectTemplate.dll": {}
+        }
+      },
+      "LeapCSharp.NET4.0/2.3.1.0": {
+        "runtime": {
+          "LeapCSharp.NET4.0.dll": {
+            "assemblyVersion": "2.3.1.0",
+            "fileVersion": "2.3.1.0"
+          }
+        }
+      },
+      "UltrahapticsCSharp.NET40/2.6.0.0": {
+        "runtime": {
+          "UltrahapticsCSharp.NET40.dll": {
+            "assemblyVersion": "2.6.0.0",
+            "fileVersion": "2.6.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "UHProjectTemplate/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "LeapCSharp.NET4.0/2.3.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UltrahapticsCSharp.NET40/2.6.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -41,7 +41,7 @@ class BuggyProtocol(DatagramProtocol):
 
     def datagramReceived(self, data, addr):
 
-        self.state = self.interpret(data) # change to by-value copy
+        self.state[:] = self.interpret(data)[:]
 
         print(self.state)
 

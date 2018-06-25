@@ -58,9 +58,9 @@ class ControlThread(threading.Thread):
 
             new_ranges = rangefinder.distances()
 
-            range_queue.put(new_ranges)
+            self.range_queue.put(new_ranges)
 
-            state = command_queue.get()
+            state = self.command_queue.get()
 
             if in_deadzone(state, deadzone):
                 buggy.stop()
@@ -80,7 +80,7 @@ class ControlThread(threading.Thread):
             else:
                 buggy.stop()
 
-            command_queue.task_done()
+            self.command_queue.task_done()
 
             print("State reset: {}".format(state))
 

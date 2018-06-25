@@ -108,7 +108,7 @@ class BuggyCommandProtocol(DatagramProtocol):
 class BuggyIOThread(threading.Thread):
     def __init__(self, protocol, range_queue):
 
-        super(BuggyIOThread, slf).__init__()
+        super(BuggyIOThread, self).__init__()
 
         self.protocol = protocol
 
@@ -125,9 +125,9 @@ class BuggyIOThread(threading.Thread):
 
         # Loop sending range messages
 
-        while self.stopped = 0:
+        while self.stopped == 0:
 
-            if not self.range_queue.empty()
+            if not self.range_queue.empty():
 
                 ranges = self.range_queue.get()
 

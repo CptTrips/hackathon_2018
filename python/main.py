@@ -4,7 +4,7 @@ from netcode import BuggyIOThread
 import netcode
 import numpy as np
 import time
-from queue import Queue
+from Queue import Queue
 
 def sensor_loop():
     """Loop for sending ultrasonic range data to controller"""
@@ -29,7 +29,7 @@ def main():
         control_thread.start()
 
         print("Initialising netcode")
-        listen_thread.start()
+        io_thread.start()
 
         print("Buggy online!")
 
@@ -38,11 +38,11 @@ def main():
     except KeyboardInterrupt:
         print("Exiting")
 
-        listen_thread.stop()
+        io_thread.stop()
 
         control_thread.stop = True
 
-        listen_thread.join()
+        io_thread.join()
         control_thread.join()
 
         print("Threads stopped gracefully")

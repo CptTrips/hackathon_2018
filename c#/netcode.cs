@@ -26,3 +26,27 @@ public class WASDController
     }
   }
 }
+
+
+public class LMController
+{
+  public LMController
+  {
+    var client = new UdpClient();
+
+    string pi_ip = "192.168.16.23"
+
+    IPEndPoint pi = new IPEndPoint(IPAddress.Parse(pi_ip), 7777);
+    Console.Write("Connecting to pi (" + pi_ip + ")...")
+    client.Connect(pi)
+    Console.Write("Connected")
+  }
+
+  public void Send(string dir)
+  {
+    Byte[] msg = Encoding.UTF8.GetBytes(dir);
+
+    client.Send(msg, msg.Length);
+
+  }
+}

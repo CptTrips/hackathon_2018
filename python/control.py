@@ -70,7 +70,8 @@ class ControlThread(threading.Thread):
                 buggy.stop()
 
             reset_state(self.state)
+            print("State reset: {}".format(self.state))
 
-            time.sleep(0.1)
+            time.sleep(0.3)
 
 

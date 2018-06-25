@@ -4,13 +4,13 @@ from gpiozero import CamJamKitRobot
 class Motors():
     def __init__(self):
         self._leftmotorspeed=1.0
-        self._rightmotorspeed=0.5
-        self._speedscale=0.6
+        self._rightmotorspeed=1.0
+        self._speedscale=0.5
         self._motorforward = (self._leftmotorspeed * self._speedscale, self._rightmotorspeed * self._speedscale)
         self._motorbackward = (-self._leftmotorspeed * self._speedscale, -self._rightmotorspeed * self._speedscale)
         self._motorright = (self._leftmotorspeed * self._speedscale, -self._rightmotorspeed * self._speedscale)
         self._motorleft = (-self._leftmotorspeed * self._speedscale, self._rightmotorspeed * self._speedscale)
-        self._duration_per_distance = 1.0
+        self._duration_per_distance = 0.1
         self._duration_per_angle = 2.0/90.0
         self._robot = CamJamKitRobot() 
     

@@ -15,7 +15,7 @@ def main():
 
     control_thread = threading.Thread(target = control_loop, args=(state,))
 
-    listen_thread = threading.Thread(target = listen, args=(state,))
+    listen_thread = threading.Thread(target = listen_loop, args=(state,))
 
     control_thread.start()
 

@@ -1,5 +1,6 @@
 import numpy as np
 import time
+from motor_sensor.motor import Motors
 
 
 def in_deadzone(state, deadzone):
@@ -33,25 +34,27 @@ def control_loop(state):
     # Parameters to put in .cfg
     deadzone = 1
 
+    buggy = Motors()
+
     while true:
 
         if in_deadzone(state, deadzone):
-            buggy_stop()
+            buggy.stop()
 
         elif in_fwzone(state):
-            buggy_go()
+            buggy.forward()
 
         elif in_bwzone(state):
-            buggy_reverse()
+            buggy.backward()
 
         elif in_lzone(state):
-            buggy_left()
+            buggy.left()
 
         elif in_rzone(state):
-            buggy_right()
+            buggy.right()
 
         else:
-            buggy_stop()
+            buggy.stop()
 
         reset_state(state)
 

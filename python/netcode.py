@@ -1,5 +1,7 @@
 from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor
+import numpy as np
+import binascii
 
 class Echo(DatagramProtocol):
 
@@ -16,11 +18,32 @@ class BuggyProtocol(DatagramProtocol):
 
     def interpret(self, data):
 
-        return data
+        # binascii the data to a char
+
+        # switch on the char to vectors
+
+        data_str = binascii.b2a_uu(data)
+        print(data_str)
+
+        dir_dict = {
+            'W' : [0,1],
+            'A' : [-1,0],
+            'S' : [0,-1],
+            'D' : [1,0]
+        }
+
+        try:
+            new_data = dir_dict[data_str]
+        except KeyError:
+            new_data = [0,0]
+
+        return new_data
 
     def datagramReceived(self, data, addr):
 
-        self.state = self.interpret(data)
+        self.state = self.interpret(data) # change to by-value copy
+
+        print(self.state)
 
 def listen_loop(state, protocol):
 

@@ -36,7 +36,7 @@ def control_loop(state):
 
     buggy = Motors()
 
-    while true:
+    while True:
 
         if in_deadzone(state, deadzone):
             buggy.stop()

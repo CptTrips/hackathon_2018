@@ -1,7 +1,9 @@
 import threading
-from control import control_loop
-from netcode import listen_loop
+from control import ControlThread
+from netcode import ListenThread
+import netcode
 import numpy as np
+import time
 
 def sensor_loop():
     """Loop for sending ultrasonic range data to controller"""
@@ -13,16 +15,38 @@ def main():
 
     state = np.array([0,0])
 
-    control_thread = threading.Thread(target = control_loop, args=(state,))
+    protocol = netcode.BuggyProtocol(state)
 
-    listen_thread = threading.Thread(target = listen_loop, args=(state,))
+    control_thread = ControlThread(state)
 
-    control_thread.start()
+    listen_thread = ListenThread(protocol)
 
-    listen_thread.start()
+    try:
+        print("Initialising control")
+        control_thread.start()
 
-    control_thread.join()
-    listen_thread.join()
+        print("Initialising netcode")
+        listen_thread.start()
+
+        print("Buggy online!")
+
+        while 1: time.sleep(1)
+
+    except KeyboardInterrupt:
+        print("Exiting")
+
+        listen_thread.stop()
+
+        control_thread.stop = True
+
+        listen_thread.join()
+        control_thread.join()
+
+        print("Threads stopped gracefully")
+
+
+
+        # catch KeyboardInterrupt, kill processes
 
 
 if __name__ == "__main__":

@@ -17,7 +17,9 @@ public class WASDController
 
       ConsoleKeyInfo msg_cki = Console.ReadKey();
 
-      Byte[] msg = Encoding.ASCII.GetBytes(msg_cki.Key.ToString());
+      Byte[] msg = Encoding.UTF8.GetBytes(msg_cki.Key.ToString());
+
+      Console.Write(msg_cki.Key.ToString());
 
       client.Send(msg, msg.Length);
 

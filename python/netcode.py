@@ -2,6 +2,7 @@ from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor
 import numpy as np
 import binascii
+import threading
 
 class Echo(DatagramProtocol):
 
@@ -22,7 +23,7 @@ class BuggyProtocol(DatagramProtocol):
 
         # switch on the char to vectors
 
-        data_str = binascii.b2a_uu(data)
+        data_str = data.decode('utf-8')
         print(data_str)
 
         dir_dict = {
@@ -45,11 +46,22 @@ class BuggyProtocol(DatagramProtocol):
 
         print(self.state)
 
-def listen_loop(state, protocol):
 
-    reactor.listenUDP(7777, protocol)
+class ListenThread(threading.Thread):
+    def __init__(self, protocol):
+        super(ListenThread,self).__init__()
+        self.protocol = protocol
 
-    reactor.run()
+
+    def run(self):
+        reactor.listenUDP(7777, self.protocol)
+
+        reactor.run()
+
+    def stop(self):
+        reactor.stop()
+        reactor.callFromThread(reactor.stop)
+
 
 if __name__ == "__main__":
     reactor.listenUDP(7777, Echo())

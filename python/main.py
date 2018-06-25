@@ -1,7 +1,7 @@
 import threading
 from control import control_loop
 from netcode import listen_loop
-
+import numpy as np
 
 def sensor_loop():
     """Loop for sending ultrasonic range data to controller"""
@@ -11,7 +11,7 @@ def sensor_loop():
 
 def main():
 
-    state = numpy.array([0,0])
+    state = np.array([0,0])
 
     control_thread = threading.Thread(target = control_loop, args=(state,))
 

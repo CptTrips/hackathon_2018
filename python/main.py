@@ -20,3 +20,6 @@ def main():
     control_thread.start()
 
     listen_thread.start()
+
+    control_thread.join()
+    listen_thread.join()

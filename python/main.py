@@ -23,3 +23,7 @@ def main():
 
     control_thread.join()
     listen_thread.join()
+
+
+if __name__ == "__main__":
+    main()

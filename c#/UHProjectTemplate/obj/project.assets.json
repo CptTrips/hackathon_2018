@@ -687,11 +687,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Patrick\\Desktop\\hackathon_2018-master\\c#\\UHProjectTemplate\\UHProjectTemplate.csproj",
+      "projectUniqueName": "C:\\Users\\Patrick\\Desktop\\hackathon_2018\\c#\\UHProjectTemplate\\UHProjectTemplate.csproj",
       "projectName": "UHProjectTemplate",
-      "projectPath": "C:\\Users\\Patrick\\Desktop\\hackathon_2018-master\\c#\\UHProjectTemplate\\UHProjectTemplate.csproj",
+      "projectPath": "C:\\Users\\Patrick\\Desktop\\hackathon_2018\\c#\\UHProjectTemplate\\UHProjectTemplate.csproj",
       "packagesPath": "C:\\Users\\Patrick\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Patrick\\Desktop\\hackathon_2018-master\\c#\\UHProjectTemplate\\obj\\",
+      "outputPath": "C:\\Users\\Patrick\\Desktop\\hackathon_2018\\c#\\UHProjectTemplate\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

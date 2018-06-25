@@ -30,6 +30,7 @@ public class ButtonExample
 
     public static void Main(string[] args)
     {
+        LMController lmc = new LMController();
         // Create an emitter, which connects to the first connected device
         AmplitudeModulationEmitter emitter = new AmplitudeModulationEmitter();
 
@@ -226,6 +227,11 @@ public class ButtonExample
                 emitter.stop();
             }
             System.Threading.Thread.Sleep(10);
+
+        float[] vec = new float[] {0.0F,1.0F};
+
+        lmc.Send(vec);
+
         }
 
         // Dispose/destroy the emitter

@@ -2,12 +2,11 @@ using System;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using System.Single;
 
 
 public class WASDController
 {
-  static public void Main ()
+  static public void wasd ()
   {
     var client = new UdpClient();
     IPEndPoint pi = new IPEndPoint(IPAddress.Parse("192.168.16.23"), 7777);
@@ -27,28 +26,29 @@ public class WASDController
     }
   }
 }
-
-
 public class LMController
 {
-  public LMController
-  {
-    var client = new UdpClient();
 
-    string pi_ip = "192.168.16.23"
+  public UdpClient client;
+  public LMController()
+  {
+
+    client = new UdpClient();
+
+    string pi_ip = "192.168.16.23";
 
     IPEndPoint pi = new IPEndPoint(IPAddress.Parse(pi_ip), 7777);
-    Console.Write("Connecting to pi (" + pi_ip + ")...")
-    client.Connect(pi)
-    Console.Write("Connected")
+    Console.Write("Connecting to pi (" + pi_ip + ")...");
+    client.Connect(pi);
+    Console.Write("Connected");
   }
 
   public void Send(float[] dir)
   {
 
-    x_byte = GetBytesSingle(dir[0]);
+    Byte[] x_byte = BitConverter.GetBytes(dir[0]);
 
-    y_byte = GetBytesSingle(dir[1]);
+    Byte[] y_byte = BitConverter.GetBytes(dir[1]);
 
     var msg = new Byte[x_byte.Length + y_byte.Length];
 
@@ -60,5 +60,6 @@ public class LMController
 
   }
 }
+
 
 

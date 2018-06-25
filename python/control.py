@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 
 def in_deadzone(state, deadzone):
@@ -20,6 +21,11 @@ def in_lzone(state):
 def in_rzone(state):
 
     return state[0] > state[1] and -state[0] < state[1]
+
+
+def reset_state(state):
+
+    state[0] = state[1] = 0
 
 
 def control_loop(state):
@@ -46,5 +52,11 @@ def control_loop(state):
 
         else:
             buggy_stop()
+
+        reset_state(state)
+
+        time.sleep(0.1)
+
+
 
 

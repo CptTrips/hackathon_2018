@@ -147,7 +147,6 @@ public class ButtonExample
                 //Console.WriteLine(hand.PalmPosition.x);
                 //Console.WriteLine(hand.PalmPosition.z-125.0);
 
-
                 if(hand.PalmPosition.z-125.0 > 60){
                     Console.WriteLine("Backwards");
                     vec = new float[] {0.0F,-1.0F};
@@ -191,6 +190,11 @@ public class ButtonExample
                 else{
                     vec = new float[]{0.0f,0.0f};
                 }
+
+                if(vec[0] != 0.0F || vec[1] != 0.0F){
+                    lmc.Send(vec);
+                }
+                
 
                 Vector3 normal = new Vector3(-hand.PalmNormal.x, -hand.PalmNormal.y, -hand.PalmNormal.z);
                 Vector3 direction = new Vector3(hand.Direction.x, hand.Direction.y, hand.Direction.z);
@@ -244,7 +248,6 @@ public class ButtonExample
 
         //float[] vec = new float[] {0.0F,1.0F};
 
-        lmc.Send(vec);
 
         }
 

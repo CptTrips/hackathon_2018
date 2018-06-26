@@ -3,6 +3,9 @@ import time
 from motor_sensor.motor import Motors
 from motor_sensor.sensors import DistanceSensors
 import threading
+from Queue import Queue
+import logging
+import time
 
 
 def in_deadzone(state, deadzone):
@@ -37,9 +40,25 @@ class ControlThread(threading.Thread):
 
         self.command_queue = command_queue
 
-        self.stop = 0
+        self.stop_q = Queue(1)
 
         self.range_queue = range_queue
+
+        # control_log
+        control_log = logging.getLogger(__name__)
+
+        control_log.setLevel(logging.INFO)
+
+        control_log_handler = logging.FileHandler('./control.log')
+        control_log_handler.setLevel(logging.INFO)
+        control_log.addHandler(control_log_handler)
+
+        timestamp = time.strftime("%H:%M:%S %d-%m-%Y")
+
+        control_log.info('BuggyCommandProtocol created ' + timestamp)
+
+        self.control_log = control_log
+
 
     def reset_state(state):
 
@@ -54,35 +73,58 @@ class ControlThread(threading.Thread):
 
         rangefinder = DistanceSensors()
 
-        while not self.stop:
+        while True:
+
+            # check the stop queue and if the stop message is there break
+            if not self.stop_q.empty():
+                stop = self.stop_q.get()
+                if stop:
+                    break
 
             new_ranges = rangefinder.distances()
 
+            if self.range_queue.full():
+                self.range_queue.get()
+                self.range_queue.task_done()
+
             self.range_queue.put(new_ranges)
 
-            state = self.command_queue.get()
+            if not self.command_queue.empty():
+                state = self.command_queue.get()
+                self.command_queue.task_done()
+            else:
+                state = [0, 0]
+
+            print('New state: {}'.format(state))
 
             if in_deadzone(state, deadzone):
                 buggy.stop()
+                print('Stop')
 
             elif in_fwzone(state):
                 buggy.forward()
+                print('Forward')
 
             elif in_bwzone(state):
                 buggy.backward()
+                print('Backward')
 
             elif in_lzone(state):
                 buggy.left()
+                print('Left')
 
             elif in_rzone(state):
                 buggy.right()
+                print('Right')
 
             else:
                 buggy.stop()
+                print('Stop')
 
-            self.command_queue.task_done()
+            time.sleep(1)
 
-            print("State reset: {}".format(state))
+        print('Control thread stopped')
 
-            time.sleep(0.01)
+    def stop(self):
+        self.stop_q.put(True)
 

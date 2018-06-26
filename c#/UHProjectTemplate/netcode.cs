@@ -6,7 +6,7 @@ using System.Text;
 
 public class WASDController
 {
-  static public void wasd ()
+  static public void Main ()
   {
     var client = new UdpClient();
     IPEndPoint pi = new IPEndPoint(IPAddress.Parse("192.168.16.23"), 7777);
@@ -17,15 +17,51 @@ public class WASDController
 
       ConsoleKeyInfo msg_cki = Console.ReadKey();
 
-      Byte[] msg = Encoding.UTF8.GetBytes(msg_cki.Key.ToString());
+      string msg_key = msg_cki.Key.ToString();
 
-      Console.Write(msg_cki.Key.ToString());
+      Console.WriteLine(msg_key);
+
+      // Switch on the keystroke and convert to float[2] then to bytes
+
+      float[] msg_vec;
+
+      switch (msg_key)
+      {
+        case "W":
+          msg_vec = new float[] {0.0F, 1.0F};
+          break;
+        case "A":
+          msg_vec = new float[] {-1.0F, 0.0F};
+          break;
+        case "S":
+          msg_vec = new float[] {0.0F, -1.0F};
+          break;
+        case "D":
+          msg_vec = new float[] {1.0F, 0.0F};
+          break;
+        default:
+          msg_vec = new float[] {0.0F, 0.0F};
+          break;
+      }
+
+      Byte[] x_byte = BitConverter.GetBytes(msg_vec[0]);
+
+      Byte[] y_byte = BitConverter.GetBytes(msg_vec[1]);
+
+      var msg = new Byte[x_byte.Length + y_byte.Length];
+
+      x_byte.CopyTo(msg, 0);
+
+      y_byte.CopyTo(msg, x_byte.Length);
+
+      Console.WriteLine(BitConverter.ToString(msg));
 
       client.Send(msg, msg.Length);
 
     }
   }
 }
+
 public class LMController
 {
 
@@ -38,9 +74,9 @@ public class LMController
     string pi_ip = "192.168.16.23";
 
     IPEndPoint pi = new IPEndPoint(IPAddress.Parse(pi_ip), 7777);
-    Console.Write("Connecting to pi (" + pi_ip + ")...");
+    Console.WriteLine("Connecting to pi (" + pi_ip + ")...");
     client.Connect(pi);
-    Console.Write("Connected");
+    Console.WriteLine("Connected");
   }
 
   public void Send(float[] dir)
@@ -55,6 +91,8 @@ public class LMController
     x_byte.CopyTo(msg, 0);
 
     y_byte.CopyTo(msg, x_byte.Length);
+
+    Console.WriteLine(BitConverter.ToString(msg));
 
     client.Send(msg, msg.Length);
 

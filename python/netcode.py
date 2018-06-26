@@ -4,6 +4,8 @@ import numpy as np
 import binascii
 import threading
 import struct
+import logging
+import time
 
 class Echo(DatagramProtocol):
 
@@ -70,19 +72,38 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         self.command_queue = command_queue
 
+        net_log = logging.getLogger(__name__)
+
+        net_log.setLevel(logging.INFO)
+
+        # Refresh/create file?
+        net_log_handler = logging.FileHandler('./network.log')
+        net_log_handler.setLevel(logging.INFO)
+
+        net_log.addHandler(net_log_handler)
+
+        timestamp = time.strftime("%H:%M:%S %d-%m-%Y")
+
+        net_log.info('BuggyCommandProtocol created ' + timestamp)
+
+        self.net_log = net_log
+
 
     def interpret(self, data):
 
         # convert bit string to 2D vector
 
-        print(data)
+        x = struct.unpack('f', data[0:4])
+        y = struct.unpack('f', data[4:8])
 
-        new_data = [struct.unpack('f', data[0:4]),
-                    struct.unpack('f', data[0:4])]
+        new_data = [x[0],
+                    y[0]]
 
         return new_data
 
     def datagramReceived(self, data, addr):
+
+        self.net_log.info(''.join('{:02x}'.format(ord(c)) for c in data))
 
         command_data = self.interpret(data)
 
@@ -92,7 +113,7 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         self.command_queue.put(command_data)
 
-        print(command_data)
+        self.net_log.info(command_data)
 
     def send_range(self, range):
 
@@ -135,9 +156,11 @@ class BuggyIOThread(threading.Thread):
 
                 time.sleep(0.3)
 
+        print('IO thread stopped')
+
     def stop(self):
         self.stopped = 1
-        reactor.stop()
+        #reactor.stop()
         reactor.callFromThread(reactor.stop)
 
 if __name__ == "__main__":

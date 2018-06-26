@@ -14,9 +14,9 @@ def sensor_loop():
 
 def main():
 
-    command_queue = Queue(1)
+    command_queue = LifoQueue(1)
 
-    range_queue = Queue(1)
+    range_queue = LifoQueue(1)
 
     protocol = netcode.BuggyCommandProtocol(command_queue)
 

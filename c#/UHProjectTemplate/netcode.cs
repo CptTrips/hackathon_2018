@@ -6,10 +6,10 @@ using System.Text;
 
 public class WASDController
 {
-  static public void Main ()
+  static public void wasd ()
   {
     var client = new UdpClient();
-    IPEndPoint pi = new IPEndPoint(IPAddress.Parse("192.168.16.23"), 7777);
+    IPEndPoint pi = new IPEndPoint(IPAddress.Parse("192.168.42.1"), 7777);
     client.Connect(pi);
 
     while(true)
@@ -71,7 +71,7 @@ public class LMController
 
     client = new UdpClient();
 
-    string pi_ip = "192.168.16.23";
+    string pi_ip = "192.168.42.1";
 
     IPEndPoint pi = new IPEndPoint(IPAddress.Parse(pi_ip), 7777);
     Console.WriteLine("Connecting to pi (" + pi_ip + ")...");

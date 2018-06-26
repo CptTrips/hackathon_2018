@@ -92,6 +92,9 @@ public class ButtonExample
             Frame frame = controller.Frame();
             HandList hands = frame.Hands;
 
+            float[] vec = new float[] {0.0F, 0.0F};
+
+
 
             if(!hands.IsEmpty && button_on)
             {
@@ -144,24 +147,30 @@ public class ButtonExample
                 //Console.WriteLine(hand.PalmPosition.x);
                 //Console.WriteLine(hand.PalmPosition.z-125.0);
 
+
                 if(hand.PalmPosition.z-125.0 > 60){
-                  // Console.WriteLine("Backwards");
+                    Console.WriteLine("Backwards");
+                    vec = new float[] {0.0F,-1.0F};
                    //Console.WriteLine(hand.PalmPosition.z-60);
                 
                 }
 
-                if(hand.PalmPosition.z-125.0 < -60){
-                   //Console.WriteLine("Forwards");
+                else if(hand.PalmPosition.z-125.0 < -60){
+                   Console.WriteLine("Forwards");
                    //Console.WriteLine(-hand.PalmPosition.z-60);
+                   vec = new float[] {0.0F,1.0F};
                 
                 }
+
                 
-                if(hand.PalmPosition.x > 60){
+                
+                else if(hand.PalmPosition.x > 60){
                 
                    countr = countr + 1;
                    if(countr > 50){
                       // Console.WriteLine("Right");
                        countr = 0;
+                       vec = new float[] {1.0F,0.0F};
 
                    }
                   
@@ -169,13 +178,18 @@ public class ButtonExample
 
                 }
 
-                if(hand.PalmPosition.x < -60){
+                else if(hand.PalmPosition.x < -60){
                    countl = countl + 1;
                    if(countl > 50){
                        //Console.WriteLine("Left");
                        countl = 0;
+                       vec = new float[] {-1.0F,0.0F};
 
                    }
+                }
+                
+                else{
+                    vec = new float[]{0.0f,0.0f};
                 }
 
                 Vector3 normal = new Vector3(-hand.PalmNormal.x, -hand.PalmNormal.y, -hand.PalmNormal.z);
@@ -228,7 +242,7 @@ public class ButtonExample
             }
             System.Threading.Thread.Sleep(10);
 
-        float[] vec = new float[] {0.0F,1.0F};
+        //float[] vec = new float[] {0.0F,1.0F};
 
         lmc.Send(vec);
 

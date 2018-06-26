@@ -196,6 +196,7 @@ public class ButtonExample
                 points[3].setPosition(device_position4);
                 // Instruct the device to stop any existing actions and start producing this control point
                 //emitter.update(points);
+                float cal = 0.1;
                 emitter.update(fingers.Skip(1)
                     .Select(f => f.TipPosition)
                     .Select(v => alignment.fromTrackingPositionToDevicePosition(new Vector3(v.x - cal*f.direction.x, v.y - cal*f.direction.y, v.z-cal*f.direction.z)))

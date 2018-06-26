@@ -196,32 +196,6 @@ public class ButtonExample
 
                 float cal = 10F;
 
-                Vector dir1 = fingers[1].TipPosition - fingers[1].Direction;
-                Vector dir2 = fingers[2].TipPosition - fingers[2].Direction;
-                Vector dir3 = fingers[3].TipPosition - fingers[3].Direction;
-                Vector dir4 = fingers[4].TipPosition - fingers[4].Direction;
-
-                List<Vector> dirlist = new List<Vector>();
-
-                dirlist.Add(dir1);
-                dirlist.Add(dir2);
-                dirlist.Add(dir3);
-                dirlist.Add(dir4);
-                
-                //Vector3 positioncal = fingers.Skip(1).Select(i=>i.TipPosition) - fingers.Skip(1).Select(f=>f.Direction);
-                List<Vector> tipPos = new List<Vector>(fingers.Skip(1).Select(i => i.TipPosition));
-                List<Vector> fingDir = new List<Vector>(fingers.Skip(1).Select(x => x.Direction));
-                List<Vector> fingDif = new List<Vector>();
-
-                int j = 0;
-                
-                foreach(var i in tipPos){
-                    fingDif.Append(i-fingDir[j]);
-                    j += 1;
-                }
-
-                Console.WriteLine(fingDir[0]);
-        
                 emitter.update(fingers.Skip(1)
                     .Select(f => f.TipPosition - cal*f.Direction)
                     .Select(v => alignment.fromTrackingPositionToDevicePosition(new Vector3(v.x, v.y, v.z)))

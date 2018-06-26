@@ -68,7 +68,7 @@ class ListenThread(threading.Thread):
 
 class BuggyCommandProtocol(DatagramProtocol):
 
-    def __init__(self, command_queue):
+    def __init__(self, command_queue, addr='192.168.42.11'):
 
         self.command_queue = command_queue
 
@@ -89,6 +89,7 @@ class BuggyCommandProtocol(DatagramProtocol):
         self.net_log = net_log
 
         # Connect transport
+        self.transport.connect(addr, 7778)
 
     def interpret(self, data):
 
@@ -119,6 +120,7 @@ class BuggyCommandProtocol(DatagramProtocol):
     def send_range(self, range):
 
         range_bytes = bytearray()
+
         for r in range:
             range_bytes += bytearray(struct("f", r))
 

@@ -2,7 +2,7 @@ from gpiozero import DistanceSensor
 import time
 #print('defining class ...')
 class DistanceSensors():
-    def __init__(self, sensors_present=(True,True,False)):
+    def __init__(self, sensors_present=(True,True,True)):
         #print('entering __init ...')
         self._trigger_pins = (17,22,24)
         self._echo_pins = (18,23,25)

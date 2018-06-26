@@ -66,6 +66,9 @@ public class LMController
 {
 
   public UdpClient client;
+
+  public float[] ranges;
+
   public LMController()
   {
 
@@ -96,6 +99,40 @@ public class LMController
 
     client.Send(msg, msg.Length);
 
+  }
+
+  private static void Listen()
+  {
+    bool done = false;
+
+    try
+    {
+
+      while (!done)
+      {
+        byte[] feedback = client.Receive(ref pi);
+        // Decode the feedback and write it to property
+        float range_front = BitConverter.ToSingle(feedback, 0);
+        float range_left = BitConverter.ToSingle(feedback, 4);
+        float range_right = BitConverter.ToSingle(feedback, 8);
+
+        Console.WriteLine("Received ranges: " + range_front.ToString(0.00)
+                                          "," + range_front.ToString(0.00)
+                                          "," + range_front.ToString(0.00));
+
+        ranges = new float[] {range_front, range_left, range_right};
+
+
+      }
+    }
+    catch (Exception e)
+    {
+      Console.Writeline(e.ToString());
+    }
+    finally
+    {
+      client.Close();
+    }
   }
 }
 

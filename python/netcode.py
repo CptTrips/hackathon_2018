@@ -4,6 +4,7 @@ import numpy as np
 import binascii
 import threading
 import struct
+import logging
 
 class Echo(DatagramProtocol):
 
@@ -70,6 +71,22 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         self.command_queue = command_queue
 
+        net_log = logging.getLogger(__name__)
+
+        net_log.setLevel(logging.INFO)
+
+        # Refresh/create file?
+        net_log_handler = logging.FileHandler('./network.log')
+        net_log_handler.setLevel(logging.INFO)
+
+        net_log.addHandler(net_log_handler)
+
+        timestamp = time.strftime("%H:%M:%S %d-%m-%Y")
+
+        net_log.info('BuggyCommandProtocol created ' + timestamp)
+
+        self.net_log = net_log
+
 
     def interpret(self, data):
 
@@ -84,6 +101,8 @@ class BuggyCommandProtocol(DatagramProtocol):
 
     def datagramReceived(self, data, addr):
 
+        self.net_log.info(data)
+
         command_data = self.interpret(data)
 
         if self.command_queue.full():
@@ -92,7 +111,8 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         self.command_queue.put(command_data)
 
-        print(command_data)
+        # Log this instead
+        self.net_log.info(command_data)
 
     def send_range(self, range):
 

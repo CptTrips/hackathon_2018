@@ -1,0 +1,16 @@
+﻿<Properties StartupConfiguration="{B7A100B1-6BB0-423A-B85A-32553247B8E4}|Default">
+  <MonoDevelop.Ide.ItemProperties.UHProjectTemplate PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="CSharp_Button_Click.cs">
+    <Files>
+      <File FileName="CSharp_Button_Click.cs" Line="16" Column="6" />
+      <File FileName="test.cs" Line="52" Column="33" />
+      <File FileName="../../../UltraHaptics/Examples/csharp/CSharp_AmplitudeModulation_Focus.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>

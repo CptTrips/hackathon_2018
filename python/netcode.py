@@ -155,6 +155,8 @@ class BuggyIOThread(threading.Thread):
 
                 time.sleep(0.3)
 
+        print('IO thread stopped')
+
     def stop(self):
         self.stopped = 1
         reactor.stop()

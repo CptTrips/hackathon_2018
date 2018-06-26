@@ -19,7 +19,7 @@ public class WASDController
 
       string msg_key = msg_cki.Key.ToString();
 
-      Console.Write(msg_key);
+      Console.WriteLine(msg_key);
 
       // Switch on the keystroke and convert to float[2] then to bytes
 
@@ -54,7 +54,7 @@ public class WASDController
 
       y_byte.CopyTo(msg, x_byte.Length);
 
-      Console.Write(BitConverter.ToString(msg));
+      Console.WriteLine(BitConverter.ToString(msg));
 
       client.Send(msg, msg.Length);
 

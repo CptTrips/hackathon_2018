@@ -86,3 +86,5 @@ class ControlThread(threading.Thread):
 
             time.sleep(0.01)
 
+        print('Control thread stopped')
+

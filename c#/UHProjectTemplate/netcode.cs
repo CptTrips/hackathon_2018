@@ -54,7 +54,7 @@ public class WASDController
 
       y_byte.CopyTo(msg, x_byte.Length);
 
-      Console.Write(msg);
+      Console.Write(BitConverter.ToString(msg));
 
       client.Send(msg, msg.Length);
 

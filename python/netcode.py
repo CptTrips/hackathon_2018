@@ -160,29 +160,6 @@ class BuggyIOThread(threading.Thread):
 
         reactor.run()
 
-        # Connect transport
-        #self.protocol.transport.connect(self.addr, 7778)
-
-        print("Sending ranges")
-
-        # Loop sending range messages
-
-        while self.stopped == 0:
-
-            print('Loop')
-
-            if not self.range_queue.empty():
-
-                ranges = self.range_queue.get()
-
-                print("Sending ranges to {}".format(addr))
-
-                self.protocol.send_range(ranges, self.addr)
-
-                self.range_queue.task_done()
-
-            time.sleep(0.1)
-
         print('IO thread stopped')
 
     def stop(self):

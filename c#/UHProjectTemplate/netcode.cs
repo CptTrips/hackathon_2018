@@ -2,6 +2,7 @@ using System;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using System.Threading;
 
 
 public class WASDController
@@ -69,6 +70,8 @@ public class LMController
 
   public IPEndPoint pi;
 
+  public IPEndPoint pi_listen;
+
   public float[] ranges;
 
   public LMController()
@@ -79,11 +82,18 @@ public class LMController
     string pi_ip = "192.168.42.1";
 
     pi = new IPEndPoint(IPAddress.Parse(pi_ip), 7777);
+    pi_listen = new IPEndPoint(IPAddress.Parse(pi_ip), 7778);
     Console.WriteLine("Connecting to pi (" + pi_ip + ")...");
     client.Connect(pi);
     Console.WriteLine("Connected");
 
     ranges = new float[] {1.0F, 1.0F, 1.0F};
+
+    ThreadStart listen_start = new ThreadStart(Listen);
+    Console.WriteLine("Creating Listen thread");
+
+    Thread listen_thread = new Thread(listen_start);
+    listen_thread.Start();
   }
 
   public void Send(float[] dir)
@@ -109,12 +119,14 @@ public class LMController
   {
     bool done = false;
 
+
     try
     {
 
+      Console.WriteLine("Listen thread started");
       while (!done)
       {
-        byte[] feedback = client.Receive(ref pi);
+        byte[] feedback = client.Receive(ref pi_listen);
         // Decode the feedback and write it to property
         float range_front = BitConverter.ToSingle(feedback, 0);
         float range_left = BitConverter.ToSingle(feedback, 4);
@@ -147,6 +159,3 @@ public class LMController
     }
   }
 }
-
-
-

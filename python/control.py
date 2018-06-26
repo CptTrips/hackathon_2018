@@ -157,6 +157,8 @@ class FineControlThread(ControlThread):
 
             print("Ranges: {}".format(new_ranges))
 
+            print(self.range_queue.empty())
+
             if not self.command_queue.empty():
                 state = self.command_queue.get()
                 self.command_queue.task_done()

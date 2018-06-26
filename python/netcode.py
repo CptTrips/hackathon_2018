@@ -68,7 +68,7 @@ class ListenThread(threading.Thread):
 
 class BuggyCommandProtocol(DatagramProtocol):
 
-    def __init__(self, command_queue):
+    def __init__(self, command_queue, range_queue):
 
         self.command_queue = command_queue
 
@@ -87,6 +87,8 @@ class BuggyCommandProtocol(DatagramProtocol):
         net_log.info('BuggyCommandProtocol created ' + timestamp)
 
         self.net_log = net_log
+
+        self.range_queue = range_queue
 
     def interpret(self, data):
 
@@ -114,20 +116,32 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         self.net_log.info(command_data)
 
-    def send_range(self, range):
+
+        ranges = self.range_queue.get()
+
+        print("Sending ranges to {}".format(addr))
+
+        self.range_queue.task_done()
+
+        self.send_range(ranges, addr)
+
+
+        time.sleep(0.1)
+
+
+    def send_range(self, range, addr):
 
         range_bytes = bytearray()
 
         for r in range:
-            range_bytes += bytearray(struct("f", r))
+            range_bytes += struct.pack('f', r) #bytearray(struct("f", r))
 
-        self.transport.write(range_bytes)
-
+        self.transport.write(range_bytes, addr)
 
 
 
 class BuggyIOThread(threading.Thread):
-    def __init__(self, protocol, range_queue, addr='192.168.42.11'):
+    def __init__(self, protocol, range_queue, addr='192.168.42.12'):
 
         super(BuggyIOThread, self).__init__()
 
@@ -147,18 +161,23 @@ class BuggyIOThread(threading.Thread):
         reactor.run()
 
         # Connect transport
-        self.protocol.transport.connect(self.addr, 7778)
+        #self.protocol.transport.connect(self.addr, 7778)
 
+        print("Sending ranges")
 
         # Loop sending range messages
 
         while self.stopped == 0:
 
+            print('Loop')
+
             if not self.range_queue.empty():
 
                 ranges = self.range_queue.get()
 
-                self.protocol.send_range(ranges)
+                print("Sending ranges to {}".format(addr))
+
+                self.protocol.send_range(ranges, self.addr)
 
                 self.range_queue.task_done()
 

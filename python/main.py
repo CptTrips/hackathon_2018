@@ -6,6 +6,7 @@ import netcode
 import numpy as np
 import time
 from Queue import LifoQueue
+from twisted.internet import reactor
 
 def sensor_loop():
     """Loop for sending ultrasonic range data to controller"""
@@ -19,7 +20,7 @@ def main():
 
     range_queue = LifoQueue(1)
 
-    protocol = netcode.BuggyCommandProtocol(command_queue)
+    protocol = netcode.BuggyCommandProtocol(command_queue, range_queue)
 
     control_thread = FineControlThread(command_queue, range_queue)
 

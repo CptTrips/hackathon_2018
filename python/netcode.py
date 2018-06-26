@@ -5,6 +5,7 @@ import binascii
 import threading
 import struct
 import logging
+import time
 
 class Echo(DatagramProtocol):
 
@@ -92,16 +93,17 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         # convert bit string to 2D vector
 
-        print(data)
+        x = struct.unpack('f', data[0:4])
+        y = struct.unpack('f', data[4:8])
 
-        new_data = [struct.unpack('f', data[0:4]),
-                    struct.unpack('f', data[0:4])]
+        new_data = [x[0],
+                    y[0]]
 
         return new_data
 
     def datagramReceived(self, data, addr):
 
-        self.net_log.info(data)
+        self.net_log.info(''.join('{:02x}'.format(ord(c)) for c in data))
 
         command_data = self.interpret(data)
 
@@ -111,7 +113,6 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         self.command_queue.put(command_data)
 
-        # Log this instead
         self.net_log.info(command_data)
 
     def send_range(self, range):
@@ -159,8 +160,8 @@ class BuggyIOThread(threading.Thread):
 
     def stop(self):
         self.stopped = 1
-        reactor.stop()
-        #reactor.callFromThread(reactor.stop)
+        #reactor.stop()
+        reactor.callFromThread(reactor.stop)
 
 if __name__ == "__main__":
     reactor.listenUDP(7777, Echo())

@@ -40,7 +40,7 @@ def main():
 
         io_thread.stop()
 
-        control_thread.stop = True
+        control_thread.stop()
 
         io_thread.join()
         control_thread.join()

@@ -3,7 +3,7 @@ from gpiozero import CamJamKitRobot
 
 class Motors():
     def __init__(self):
-        self._leftmotorspeed=1.0
+        self._leftmotorspeed=0.95
         self._rightmotorspeed=1.0
         self._speedscale=0.5
         self._motorforward = (self._leftmotorspeed * self._speedscale, self._rightmotorspeed * self._speedscale)
@@ -11,13 +11,13 @@ class Motors():
         self._motorright = (self._leftmotorspeed * self._speedscale, -self._rightmotorspeed * self._speedscale)
         self._motorleft = (-self._leftmotorspeed * self._speedscale, self._rightmotorspeed * self._speedscale)
         self._duration_per_distance = 0.1
-        self._duration_per_angle = 2.0/90.0
-        self._robot = CamJamKitRobot() 
-    
+        self._duration_per_angle = (4.0/5.0)*(95.0/90.0)*0.5/90.0
+        self._robot = CamJamKitRobot()
+
     def forward(self, distance=10):
         self._robot.value = self._motorforward
         time.sleep(distance * self._duration_per_distance)
-        self._robot.stop()     
+        self._robot.stop()
 
     def backward(self, distance=10):
         self._robot.value = self._motorbackward
@@ -28,10 +28,10 @@ class Motors():
         self._robot.value = self._motorright
         time.sleep(angle * self._duration_per_angle)
         self.stop()
-	
+
     def left(self, angle=90.0):
         self._robot.value = self._motorleft
-        time.sleep(angle * self._duration_per_angle)
+        time.sleep(angle * self._duration_per_angle * (94.0/90.0))
         self.stop()
 
     def cont_forward(self, left=1.0, right=1.0):
@@ -44,13 +44,10 @@ class Motors():
 
     def stop(self):
         self._robot.stop()
-        
-if __name__=="__main__":
-	motors = Motors()
-	motors.cont_backward(left=0.7,right=1.0)
-	time.sleep(3)
-	motors.stop()
-	
-	
-    
 
+if __name__=="__main__":
+    motors = Motors()
+
+    for i in range(1):
+        motors.forward()
+        time.sleep(1)

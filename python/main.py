@@ -1,10 +1,11 @@
 import threading
 from control import ControlThread
+from control import FineControlThread
 from netcode import BuggyIOThread
 import netcode
 import numpy as np
 import time
-from Queue import Queue
+from Queue import LifoQueue
 
 def sensor_loop():
     """Loop for sending ultrasonic range data to controller"""
@@ -20,7 +21,7 @@ def main():
 
     protocol = netcode.BuggyCommandProtocol(command_queue)
 
-    control_thread = ControlThread(command_queue, range_queue)
+    control_thread = FineControlThread(command_queue, range_queue)
 
     io_thread = BuggyIOThread(protocol, range_queue)
 

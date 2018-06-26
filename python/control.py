@@ -121,10 +121,71 @@ class ControlThread(threading.Thread):
                 buggy.stop()
                 print('Stop')
 
-            time.sleep(1)
+            time.sleep(0.05)
 
         print('Control thread stopped')
 
     def stop(self):
         self.stop_q.put(True)
+
+
+class FineControlThread(ControlThread):
+
+    def run(self):
+        # Parameters to put in .cfg
+        deadzone = 0
+
+        buggy = Motors()
+
+        rangefinder = DistanceSensors()
+
+        while True:
+
+            # check the stop queue and if the stop message is there break
+            if not self.stop_q.empty():
+                stop = self.stop_q.get()
+                if stop:
+                    break
+
+            new_ranges = rangefinder.distances()
+
+            if self.range_queue.full():
+                self.range_queue.get()
+                self.range_queue.task_done()
+
+            self.range_queue.put(new_ranges)
+
+            print("Ranges: {}".format(new_ranges))
+
+            if not self.command_queue.empty():
+                state = self.command_queue.get()
+                self.command_queue.task_done()
+            else:
+                state = [0, 0]
+
+            print('New state: {}'.format(state))
+
+            if in_deadzone(state, deadzone):
+                buggy.stop()
+                print('Stop')
+
+            else:
+
+                l = -state[0] + state[1]
+                r = state[0] + state[1]
+
+                if abs(l) > 1:
+                    l = l / abs(l)
+                if abs(r) > 1:
+                    r = r / abs(r)
+
+                buggy.cont_forward(l, r)
+
+                print("Input: {}".format(state))
+
+
+            time.sleep(0.05)
+
+        print('Control thread stopped')
+
 

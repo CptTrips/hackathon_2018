@@ -88,7 +88,7 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         self.net_log = net_log
 
-        self.
+        # Connect transport
 
     def interpret(self, data):
 
@@ -153,11 +153,11 @@ class BuggyIOThread(threading.Thread):
 
                 ranges = self.range_queue.get()
 
-                self.protocol.send(ranges)
+                #self.protocol.send(ranges)
 
                 self.range_queue.task_done()
 
-            time.sleep(0.2)
+            time.sleep(0.1)
 
         print('IO thread stopped')
 

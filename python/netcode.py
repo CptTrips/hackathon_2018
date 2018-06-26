@@ -158,7 +158,7 @@ class BuggyIOThread(threading.Thread):
     def stop(self):
         self.stopped = 1
         reactor.stop()
-        reactor.callFromThread(reactor.stop)
+        #reactor.callFromThread(reactor.stop)
 
 if __name__ == "__main__":
     reactor.listenUDP(7777, Echo())

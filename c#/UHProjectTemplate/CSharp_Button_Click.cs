@@ -198,7 +198,7 @@ public class ButtonExample
                 //emitter.update(points);
                 emitter.update(fingers.Skip(1)
                     .Select(f => f.TipPosition)
-                    .Select(v => alignment.fromTrackingPositionToDevicePosition(new Vector3(v.x-50, v.y-50, v.z-50)))
+                    .Select(v => alignment.fromTrackingPositionToDevicePosition(new Vector3(v.x - cal*f.direction.x, v.y - cal*f.direction.y, v.z-cal*f.direction.z)))
                     .Select(v => new AmplitudeModulationControlPoint(v, 1, 140)));
                 // The emitter will continue producing this point until instructed to stop
 

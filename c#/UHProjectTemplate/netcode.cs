@@ -6,7 +6,7 @@ using System.Text;
 
 public class WASDController
 {
-  static public void Main ()
+  static public void WASD ()
   {
     var client = new UdpClient();
     IPEndPoint pi = new IPEndPoint(IPAddress.Parse("192.168.16.23"), 7777);
@@ -67,6 +67,8 @@ public class LMController
 
   public UdpClient client;
 
+  public IPEndPoint pi;
+
   public float[] ranges;
 
   public LMController()
@@ -74,12 +76,14 @@ public class LMController
 
     client = new UdpClient();
 
-    string pi_ip = "192.168.16.23";
+    string pi_ip = "192.168.42.1";
 
-    IPEndPoint pi = new IPEndPoint(IPAddress.Parse(pi_ip), 7777);
+    pi = new IPEndPoint(IPAddress.Parse(pi_ip), 7777);
     Console.WriteLine("Connecting to pi (" + pi_ip + ")...");
     client.Connect(pi);
     Console.WriteLine("Connected");
+
+    ranges = new float[] {1.0F, 1.0F, 1.0F};
   }
 
   public void Send(float[] dir)
@@ -101,7 +105,7 @@ public class LMController
 
   }
 
-  private static void Listen()
+  private void Listen()
   {
     bool done = false;
 
@@ -116,9 +120,9 @@ public class LMController
         float range_left = BitConverter.ToSingle(feedback, 4);
         float range_right = BitConverter.ToSingle(feedback, 8);
 
-        Console.WriteLine("Received ranges: " + range_front.ToString(0.00)
-                                          "," + range_front.ToString(0.00)
-                                          "," + range_front.ToString(0.00));
+        Console.WriteLine("Received ranges: " + range_front.ToString("0.00") +
+                                          "," + range_front.ToString("0.00") +
+                                          "," + range_front.ToString("0.00"));
 
         ranges = new float[] {range_front, range_left, range_right};
 
@@ -127,11 +131,19 @@ public class LMController
     }
     catch (Exception e)
     {
-      Console.Writeline(e.ToString());
+      Console.WriteLine(e.ToString());
     }
     finally
     {
       client.Close();
+    }
+  }
+
+  public float[] Ranges
+  {
+    get
+    {
+      return ranges;
     }
   }
 }

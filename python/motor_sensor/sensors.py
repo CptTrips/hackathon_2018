@@ -2,29 +2,27 @@ from gpiozero import DistanceSensor
 import time
 #print('defining class ...')
 class DistanceSensors():
-    def __init__(self, sensors_present=(True,True,True)):
-        #print('entering __init ...')
-        self._trigger_pins = (17,22,24)
-        self._echo_pins = (18,23,25)
+    def __init__(self):
+        self._trigger_pins = (17,22,16)
+        self._echo_pins = (18,23,20)
         self._sensors = []
-        for present, index in zip(sensors_present,range(3)):
-            #print('present, index: ', present, index)
-            if present is True:
-                 self._sensors.append(DistanceSensor(
-                                      echo=self._echo_pins[index],
-                                      trigger=self._trigger_pins[index])
+        self._sensors.append(DistanceSensor(
+                                  echo=self._echo_pins[0],
+                                  trigger=self._trigger_pins[0])
                                      )
-        else:    
-            self._sensors.append(None)
-        #print('leaving init ...')
-
+        self._sensors.append(DistanceSensor(
+                                  echo=self._echo_pins[1],
+                                  trigger=self._trigger_pins[1])
+                                  )
+        self._sensors.append(DistanceSensor(
+                                  echo=self._echo_pins[2],
+                                  trigger=self._trigger_pins[2])
+                                  )
     def distances(self):
         dists = []
-        for sensor in self._sensors:
-            if sensor is None:
-                dists.append(None)
-            else:
-                dists.append(sensor.distance)
+        dists.append(self._sensors[0].distance)
+        dists.append(self._sensors[1].distance)        
+        dists.append(self._sensors[2].distance)
         return dists
         
 if __name__=="__main__":

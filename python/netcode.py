@@ -68,7 +68,7 @@ class ListenThread(threading.Thread):
 
 class BuggyCommandProtocol(DatagramProtocol):
 
-    def __init__(self, command_queue, addr='192.168.42.11'):
+    def __init__(self, command_queue):
 
         self.command_queue = command_queue
 
@@ -87,9 +87,6 @@ class BuggyCommandProtocol(DatagramProtocol):
         net_log.info('BuggyCommandProtocol created ' + timestamp)
 
         self.net_log = net_log
-
-        # Connect transport
-        self.transport.connect(addr, 7778)
 
     def interpret(self, data):
 
@@ -130,7 +127,7 @@ class BuggyCommandProtocol(DatagramProtocol):
 
 
 class BuggyIOThread(threading.Thread):
-    def __init__(self, protocol, range_queue):
+    def __init__(self, protocol, range_queue, addr='192.168.42.11'):
 
         super(BuggyIOThread, self).__init__()
 
@@ -142,10 +139,16 @@ class BuggyIOThread(threading.Thread):
 
         self.range_queue = range_queue
 
+        self.addr = addr
+
     def run(self):
         reactor.listenUDP(7777, self.protocol)
 
         reactor.run()
+
+        # Connect transport
+        self.protocol.transport.connect(self.addr, 7778)
+
 
         # Loop sending range messages
 
@@ -155,7 +158,7 @@ class BuggyIOThread(threading.Thread):
 
                 ranges = self.range_queue.get()
 
-                #self.protocol.send(ranges)
+                self.protocol.send_range(ranges)
 
                 self.range_queue.task_done()
 

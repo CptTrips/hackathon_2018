@@ -147,52 +147,74 @@ public class ButtonExample
                 //Console.WriteLine(hand.PalmPosition.x);
                 //Console.WriteLine(hand.PalmPosition.z-125.0);
 
-                if(hand.PalmPosition.z-125.0 > 60){
-                    Console.WriteLine("Backwards");
-                    vec = new float[] {0.0F,-1.0F};
-                   //Console.WriteLine(hand.PalmPosition.z-60);
-                
-                }
+                Vector3 newpalm = alignment.fromTrackingPositionToDevicePosition(new Vector3(hand.PalmPosition.x,hand.PalmPosition.y,hand.PalmPosition.z));
+            
+                if(Math.Pow(newpalm.x,2)+Math.Pow(newpalm.y,2) > 0.05*0.05){
 
-                else if(hand.PalmPosition.z-125.0 < -60){
-                   Console.WriteLine("Forwards");
-                   //Console.WriteLine(-hand.PalmPosition.z-60);
-                   vec = new float[] {0.0F,1.0F};
-                
-                }
+                    float cubex = Convert.ToSingle(Math.Pow(newpalm.x*7,3));
+                    float cubey = Convert.ToSingle(Math.Pow(newpalm.y*7,3));
 
-                
-                
-                else if(hand.PalmPosition.x > 60){
-                
-                   countr = countr + 1;
-                   if(countr > 50){
-                      // Console.WriteLine("Right");
-                       countr = 0;
-                       vec = new float[] {1.0F,0.0F};
+                    vec = new float[] {cubex,cubey};
+                    Console.WriteLine(cubex);
+                    Console.WriteLine(cubey);
 
-                   }
-                  
-                   //Console.WriteLine(hand.PalmPosition.z-60);
+                } 
 
-                }
+                //Console.WriteLine(hand.PalmPosition.x);
+                //Console.WriteLine(hand.PalmPosition.z);
+                //vec = new float[] {0.0F,0.0F};
 
-                else if(hand.PalmPosition.x < -60){
-                   countl = countl + 1;
-                   if(countl > 50){
-                       //Console.WriteLine("Left");
-                       countl = 0;
-                       vec = new float[] {-1.0F,0.0F};
-
-                   }
-                }
-                
                 else{
-                    vec = new float[]{0.0f,0.0f};
-                }
+                    vec =new float[] {0.0F,0.0F};
+                }               
+
+                //if(hand.PalmPosition.z-125.0 > 60){
+                  //  Console.WriteLine("Backwards");
+                    //vec = new float[] {0.0F,-1.0F};
+                   //Console.WriteLine(hand.PalmPosition.z-60);
+                
+                //}
+
+                // else if(hand.PalmPosition.z-125.0 < -60){
+                //    Console.WriteLine("Forwards");
+                //    //Console.WriteLine(-hand.PalmPosition.z-60);
+                //    vec = new float[] {0.0F,1.0F};
+                
+                // }
+
+                
+                
+                // else if(hand.PalmPosition.x > 60){
+                
+                //    countr = countr + 1;
+                //    if(countr > 50){
+                //       // Console.WriteLine("Right");
+                //        countr = 0;
+                //        vec = new float[] {1.0F,0.0F};
+
+                //    }
+                  
+                //    //Console.WriteLine(hand.PalmPosition.z-60);
+
+                // }
+
+                // else if(hand.PalmPosition.x < -60){
+                //    countl = countl + 1;
+                //    if(countl > 50){
+                //        //Console.WriteLine("Left");
+                //        countl = 0;
+                //        vec = new float[] {-1.0F,0.0F};
+                //        vec = new float[] {hand.PalmPosition.x,};
+
+                //    }
+                // }
+                
+                // else{
+                //     vec = new float[]{0.0f,0.0f};
+                // }
 
                 if(vec[0] != 0.0F || vec[1] != 0.0F){
-                    lmc.Send(vec);
+                     lmc.Send(vec);
                 }
                 
 
@@ -212,13 +234,32 @@ public class ButtonExample
                 // Instruct the device to stop any existing actions and start producing this control point
                 //emitter.update(points);
 
-                float cal = 10F;
+                float caldir = 0.0F;
+                float calint = 1.0F;
+                float calleft = 10F;
+                float calright = 40F;
 
-                emitter.update(fingers.Skip(1)
-                    .Select(f => f.TipPosition - cal*f.Direction)
+                //if(frontnum < 5){
+                  //  emitter.update(fingers.Skip(1).Skip(2).Skip(5)
+                    //.Select(f => f.TipPosition - (5-frontnum)*cal*f.Direction)
+                    //.Select(v => alignment.fromTrackingPositionToDevicePosition(new Vector3(v.x, v.y, v.z)))
+                    //.Select(v => new AmplitudeModulationControlPoint(v, 1, 140)));
+                //}
+
+                Vector calvecleft = new Vector(0.0F,0.0F,calleft);
+                Vector calvecright = new Vector(0.0F,0.0F,-calright);
+                List<Finger> finglist = new List<Finger>{fingers[2],fingers[3], };
+                List<Vector> bonelist = new List<Vector>{fingers[0].Bone(Bone.BoneType.TYPE_PROXIMAL).Center-calvecleft, fingers[4].Bone(Bone.BoneType.TYPE_PROXIMAL).Center-calvecright}; 
+                IEnumerable<Vector> finglist2 = finglist.Select(f => f.TipPosition - caldir*f.Direction);
+                List<Vector> combinedlist = finglist2.Concat(bonelist).ToList();
+
+                emitter.update(combinedlist
                     .Select(v => alignment.fromTrackingPositionToDevicePosition(new Vector3(v.x, v.y, v.z)))
-                    .Select(v => new AmplitudeModulationControlPoint(v, 1, 140)));
+                    .Select(v => new AmplitudeModulationControlPoint(v, calint*1, 140)));
                 // The emitter will continue producing this point until instructed to stop
+
+                //emitter.update(bonelist.Select(f => alignment.fromTrackingPositionToDevicePosition(new Vector3(f.x,f.y,f.z)))
+                //     .Select(v => new AmplitudeModulationControlPoint(v, calint*1, 140)));
 
                 button.angle += 0.05f;
                 button.angle = button.angle % (2.0f * PI);

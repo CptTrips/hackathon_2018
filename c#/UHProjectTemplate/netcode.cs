@@ -74,9 +74,9 @@ public class LMController
     string pi_ip = "192.168.16.23";
 
     IPEndPoint pi = new IPEndPoint(IPAddress.Parse(pi_ip), 7777);
-    Console.Write("Connecting to pi (" + pi_ip + ")...");
+    Console.WriteLine("Connecting to pi (" + pi_ip + ")...");
     client.Connect(pi);
-    Console.Write("Connected");
+    Console.WriteLine("Connected");
   }
 
   public void Send(float[] dir)
@@ -91,6 +91,8 @@ public class LMController
     x_byte.CopyTo(msg, 0);
 
     y_byte.CopyTo(msg, x_byte.Length);
+
+    Console.WriteLine(BitConverter.ToString(msg));
 
     client.Send(msg, msg.Length);
 

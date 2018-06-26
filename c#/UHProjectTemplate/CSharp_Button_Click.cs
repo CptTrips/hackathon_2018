@@ -234,10 +234,12 @@ public class ButtonExample
                 // Instruct the device to stop any existing actions and start producing this control point
                 //emitter.update(points);
 
-                float caldir = 0.0F;
-                float calint = 1.0F;
-                float calleft = 10F;
-                float calright = 40F;
+                float distancef = 5;
+                float distancel = 5;
+
+                float caldir = 100F/distancef;
+                float calint = 10.0F/distancef;
+                float calleft = 50F/distancel;
 
                 //if(frontnum < 5){
                   //  emitter.update(fingers.Skip(1).Skip(2).Skip(5)
@@ -246,10 +248,9 @@ public class ButtonExample
                     //.Select(v => new AmplitudeModulationControlPoint(v, 1, 140)));
                 //}
 
-                Vector calvecleft = new Vector(0.0F,0.0F,calleft);
-                Vector calvecright = new Vector(0.0F,0.0F,-calright);
+                Vector calvecleft = new Vector(calleft,0.0F,0.0F);
                 List<Finger> finglist = new List<Finger>{fingers[2],fingers[3], };
-                List<Vector> bonelist = new List<Vector>{fingers[0].Bone(Bone.BoneType.TYPE_PROXIMAL).Center-calvecleft, fingers[4].Bone(Bone.BoneType.TYPE_PROXIMAL).Center-calvecright}; 
+                List<Vector> bonelist = new List<Vector>{fingers[0].Bone(Bone.BoneType.TYPE_PROXIMAL).Center-calvecleft}; 
                 IEnumerable<Vector> finglist2 = finglist.Select(f => f.TipPosition - caldir*f.Direction);
                 List<Vector> combinedlist = finglist2.Concat(bonelist).ToList();
 

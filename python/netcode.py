@@ -108,7 +108,7 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         command_data = self.interpret(data)
 
-        if self.command_queue.full():
+        while not self.command_queue.empty():
             self.command_queue.get()
             self.command_queue.task_done()
 
@@ -116,17 +116,11 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         self.net_log.info(command_data)
 
-
         ranges = self.range_queue.get()
-
-        print("Sending ranges to {}".format(addr))
 
         self.range_queue.task_done()
 
         self.send_range(ranges, addr)
-
-
-        time.sleep(0.1)
 
 
     def send_range(self, range, addr):
@@ -135,6 +129,10 @@ class BuggyCommandProtocol(DatagramProtocol):
 
         for r in range:
             range_bytes += struct.pack('f', r) #bytearray(struct("f", r))
+
+        addr = (addr[0], 7778)
+
+        print("Sending ranges to {}".format(addr))
 
         self.transport.write(range_bytes, addr)
 
@@ -147,13 +145,6 @@ class BuggyIOThread(threading.Thread):
 
         self.protocol = protocol
 
-        self.stopped = 0
-
-        self.range_data = np.array([1, 1, 1])
-
-        self.range_queue = range_queue
-
-        self.addr = addr
 
     def run(self):
         reactor.listenUDP(7777, self.protocol)
@@ -163,8 +154,7 @@ class BuggyIOThread(threading.Thread):
         print('IO thread stopped')
 
     def stop(self):
-        self.stopped = 1
-        #reactor.stop()
+
         reactor.callFromThread(reactor.stop)
 
 if __name__ == "__main__":

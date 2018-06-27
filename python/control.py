@@ -67,7 +67,7 @@ class ControlThread(threading.Thread):
     def run(self):
 
         # Parameters to put in .cfg
-        deadzone = 1
+        deadzone = 0
 
         buggy = Motors()
 
@@ -161,7 +161,6 @@ class FineControlThread(ControlThread):
 
             if not self.command_queue.empty():
                 state = self.command_queue.get()
-                self.command_queue.task_done()
             else:
                 state = [0, 0]
 
@@ -186,7 +185,7 @@ class FineControlThread(ControlThread):
                 print("Input: {}".format(state))
 
 
-            time.sleep(0.05)
+            time.sleep(0.2)
 
         print('Control thread stopped')
 
